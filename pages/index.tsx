@@ -6,6 +6,7 @@ import DefaultLayout from "@/layouts";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import Tag from "@/components/Tag";
+import Modal from "@/components/Modal";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,6 +29,14 @@ export default function Home() {
           <Tag variant="danger">Text 2</Tag>
           <Tag variant="success">Text 3</Tag>
           <Tag variant="alert">Text 1</Tag>
+          <Modal
+            title="test"
+            closeBtn={() => {
+              console.log("test");
+            }}
+          >
+            test
+          </Modal>
         </DefaultLayout>
       </main>
     </>
