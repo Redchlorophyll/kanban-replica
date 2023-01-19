@@ -11,7 +11,7 @@ type buttonStyle = {
 };
 
 export default function Button({
-  variant = "outline",
+  variant = "primary",
   children = "Button",
   onClick,
 }: buttonProps) {

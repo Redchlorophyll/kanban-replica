@@ -2,8 +2,10 @@ import Head from "next/head";
 import Image from "next/image";
 import { Inter } from "@next/font/google";
 import styles from "@/styles/Home.module.css";
-import Navbar from "@/components/Navbar";
 import DefaultLayout from "@/layouts";
+import Button from "@/components/Button";
+import Input from "@/components/Input";
+import Tag from "@/components/Tag";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,7 +19,16 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <DefaultLayout>test</DefaultLayout>
+        <DefaultLayout>
+          <Button variant="primary">Test</Button>
+          <Button variant="danger">Test</Button>
+          <Button variant="outline">Test</Button>
+          <Input label="test" />
+          <Tag>Text 1</Tag>
+          <Tag variant="danger">Text 2</Tag>
+          <Tag variant="success">Text 3</Tag>
+          <Tag variant="alert">Text 1</Tag>
+        </DefaultLayout>
       </main>
     </>
   );
