@@ -7,6 +7,7 @@ import Button from "@/components/Button";
 import Input from "@/components/Input";
 import Tag from "@/components/Tag";
 import Modal from "@/components/Modal";
+import ProgressBar from "@/components/ProgressBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -37,6 +38,9 @@ export default function Home() {
           >
             test
           </Modal> */}
+          <div className="w-[40%]">
+            <ProgressBar precentage={10} />
+          </div>
         </DefaultLayout>
       </main>
     </>
