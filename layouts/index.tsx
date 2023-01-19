@@ -7,7 +7,7 @@ type defaultLayout = {
 
 export default function defaultLayout({ children }: defaultLayout) {
   return (
-    <div className="w-full h-[100vh] bg-white">
+    <div className="w-full h-[100vh] bg-white text-black">
       <Navbar />
       {children}
     </div>
