@@ -9,6 +9,7 @@ import Tag from "@/components/Tag";
 import Modal from "@/components/Modal";
 import ProgressBar from "@/components/ProgressBar";
 import { useState } from "react";
+import Textarea from "@/components/Textarea";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -47,6 +48,7 @@ export default function Home() {
           <div className="w-[40%]">
             <ProgressBar precentage={10} />
           </div>
+          <Textarea value={inputText} onChange={(v) => setInputText(v)} />
         </DefaultLayout>
       </main>
     </>

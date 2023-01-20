@@ -38,7 +38,7 @@ export default function Input({
       )}
       <div
         className={[
-          "w-full rounded-[7px] border-[0.5px] border-solid",
+          "w-full rounded-[8px] border-[0.5px] border-solid",
           "px-[8px] py-[6px]",
           "outline-none",
           "disabled-within:bg-black-200 disabled-within:text-black-700",
@@ -57,7 +57,7 @@ export default function Input({
           disabled={isDisabled}
           type="text"
           className={[
-            "focus:outline-0 p-0 w-full bg-red-50 border-l-2",
+            "focus:outline-0 p-0 w-full border-l-2",
             value.length !== 0 ? "border-l-2 border-[#01959F] pl-1" : "",
           ].join(" ")}
         />
