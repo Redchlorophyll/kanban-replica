@@ -36,25 +36,32 @@ export default function Input({
       ) : (
         ""
       )}
-      <input
-        id={inputId}
-        aria-label="input"
-        value={value}
-        placeholder={placeholder}
-        onChange={(event) => onInputChange(event)}
-        disabled={isDisabled}
+      <div
         className={[
-          "w-full h-[34px] rounded-[7px] border-[0.5px] border-solid",
-          "px-[17px] py-[6px] dark:text-black-900",
-          "focus:dark:drop-shadow-[0px_1px_17px_#406FCB] outline-none",
-          "disabled:bg-black-200 disabled:text-black-700",
-          "disabled:border-black-600 dark:disabled:bg-black-500",
-          isError
-            ? "border-red-800"
-            : "border-[#E0E0E0] focus:border-[#01959F]",
+          "w-full rounded-[7px] border-[0.5px] border-solid",
+          "px-[8px] py-[6px]",
+          "outline-none",
+          "disabled-within:bg-black-200 disabled-within:text-black-700",
+          "disabled-within:border-black-600 border",
+          value.length !== 0
+            ? "focus-within:border-[#01959F]"
+            : "focus-within:border-[rgba(1,149,159,0.2)]",
         ].join(" ")}
-        type="text"
-      />
+      >
+        <input
+          id={inputId}
+          aria-label="input"
+          value={value}
+          placeholder={placeholder}
+          onChange={(event) => onInputChange(event)}
+          disabled={isDisabled}
+          type="text"
+          className={[
+            "focus:outline-0 p-0 w-full bg-red-50 border-l-2",
+            value.length !== 0 ? "border-l-2 border-[#01959F] pl-1" : "",
+          ].join(" ")}
+        />
+      </div>
       {isError ? (
         <span className="text-sm text-red-800">{errorMessage}</span>
       ) : (

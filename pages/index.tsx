@@ -8,10 +8,12 @@ import Input from "@/components/Input";
 import Tag from "@/components/Tag";
 import Modal from "@/components/Modal";
 import ProgressBar from "@/components/ProgressBar";
+import { useState } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
+  const [inputText, setInputText] = useState("");
   return (
     <>
       <Head>
@@ -25,7 +27,11 @@ export default function Home() {
           <Button variant="primary">Test</Button>
           <Button variant="danger">Test</Button>
           <Button variant="outline">Test</Button>
-          <Input label="test" />
+          <Input
+            label="test"
+            value={inputText}
+            onChange={(v) => setInputText(v)}
+          />
           <Tag>Text 1</Tag>
           <Tag variant="danger">Text 2</Tag>
           <Tag variant="success">Text 3</Tag>
