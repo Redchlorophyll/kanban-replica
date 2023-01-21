@@ -7,16 +7,19 @@ import Input from "@/components/Input";
 import Tag from "@/components/Tag";
 import Modal from "@/components/Modal";
 import ProgressBar from "@/components/ProgressBar";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Textarea from "@/components/Textarea";
 import Card from "@/components/Card";
 import icMore from "@/assets/ic_more.svg";
 import icArrowRight from "@/assets/ic_arrow-right.svg";
+import icArrowRightActive from "@/assets/ic_arrow-right-active.svg";
 import icArrowLeft from "@/assets/ic_arrow-left.svg";
+import icArrowLeftActive from "@/assets/ic_arrow-left-active.svg";
 import icEdit from "@/assets/ic_edit.svg";
+import icEditActive from "@/assets/ic_edit-active.svg";
 import icTrash from "@/assets/ic_trash.svg";
+import icTrashActive from "@/assets/ic_trash-active.svg";
 import icCreate from "@/assets/ic_create.svg";
-import { setgroups } from "process";
 
 type groupType = {
   id: number;
@@ -43,6 +46,7 @@ type taskForm = {
 export default function Home() {
   const [inputText, setInputText] = useState("");
   const [isCreateGroupModalOpen, setIsCreateGroupModalOpen] = useState(false);
+  const [taskFormType, setTaskFormtype] = useState<"create" | "edit">("create");
   const [groupForm, setGroupForm] = useState<groupForm>({
     title: "",
     description: "",
@@ -52,22 +56,30 @@ export default function Home() {
     progress_percentage: 0,
     isOptionOpen: false,
   });
+  const [imageHover, setImageHover] = useState({
+    isArrowRightActive: false,
+    isArrowLeftActive: false,
+    isEditActive: false,
+    isTrashActive: false,
+  });
   const [variantCounter, setVariantCounter] = useState(0);
   const [activeGroup, setActiveGroup] = useState(0);
+  const [activeTask, setActiveTask] = useState(0);
   const [iseCreateTaskModalOpen, setIseCreateTaskModalOpen] = useState(false);
   const [groups, setGroup] = useState<groupType[]>([]);
+  const groupVariants = ["primary", "alert", "danger", "success"];
   const onOptionOpen = (
     event: React.FormEvent<HTMLInputElement>,
     groupIdx: number,
     taskIdx: number
   ) => {
+    console.log("should be clicked");
     const { checked } = event.target as HTMLInputElement;
     const data = [...groups];
-    console.log(data[groupIdx].tasks[taskIdx], checked);
+    console.log("open", data[groupIdx].tasks[taskIdx], checked);
     data[groupIdx].tasks[taskIdx].isOptionOpen = checked;
     setGroup(data);
   };
-  const groupVariants = ["primary", "alert", "danger", "success"];
 
   const variantSelector = () => {
     let tmpVariantCounter = groups.length;
@@ -100,13 +112,21 @@ export default function Home() {
   };
 
   const onSubmitCreateTask = () => {
-    const data = groups.map((group) => {
-      if (group.id === activeGroup) {
-        group.tasks.push(taskForm);
-      }
-      return group;
-    });
-    console.log(data);
+    let data;
+    if (taskFormType === "create") {
+      data = groups.map((group) => {
+        if (group.id === activeGroup) {
+          group.tasks.push(taskForm);
+        }
+        return group;
+      });
+    } else {
+      data = [...groups];
+      data[activeGroup].tasks[activeTask] = taskForm;
+    }
+
+    setGroup(data);
+
     setIseCreateTaskModalOpen(false);
     setTaskForm({
       name: "",
@@ -115,10 +135,77 @@ export default function Home() {
     });
   };
 
-  const tasksHtml = (id: number) => {
-    return groups[id].tasks.map((task, idx) => {
+  const TasksHtml = ({ id }: { id: number }) => {
+    const dropdownRef = useRef<HTMLDivElement[]>([]);
+    const [refIdx, setrefIdx] = useState(0);
+
+    const deleteTask = (groupNumber: number, taskIndex: number) => {
+      const data = [...groups];
+      data[groupNumber].tasks.splice(taskIndex, 1);
+      setGroup(data);
+    };
+
+    const editTask = (groupNumber: number, taskIndex: number) => {
+      const data = groups[groupNumber].tasks[taskIndex];
+      setTaskFormtype("edit");
+      setActiveGroup(groupNumber);
+      setActiveTask(taskIndex);
+      setIseCreateTaskModalOpen(true);
+      setTaskForm(data);
+    };
+
+    const moveTo = (
+      direction: string,
+      groupNumber: number,
+      taskIndex: number
+    ) => {
+      const data = [...groups];
+      const val = data[groupNumber].tasks[taskIndex];
+      console.log("testsssss", data[groupNumber], data[id + 1]);
+      data[groupNumber].tasks.splice(taskIndex, 1);
+      if (direction === "next" && data[groupNumber + 1]) {
+        data[groupNumber + 1].tasks.push(val);
+        setGroup(data);
+      } else if (direction === "prev" && data[groupNumber - 1]) {
+        data[groupNumber - 1].tasks.push(val);
+        setGroup(data);
+      }
+    };
+
+    useEffect(() => {
+      const handleClickOutside = (event: MouseEvent) => {
+        let isOtherDropdownNotClicked = false;
+        dropdownRef.current.forEach((divData) => {
+          console.log("test", event.target as Node, divData);
+          if (divData === (event.target as Node)) {
+            isOtherDropdownNotClicked = false;
+          } else isOtherDropdownNotClicked = true;
+        });
+        console.log(dropdownRef.current);
+
+        // if (
+        //   dropdownRef.current[refIdx] &&
+        //   !dropdownRef.current[refIdx].contains(event.target as Node) &&
+        //   isOtherDropdownNotClicked
+        // ) {
+        //   const datas = [...groups];
+        //   datas[id].tasks.forEach((data: taskForm) => {
+        //     data.isOptionOpen = false;
+        //   });
+        //   setGroup(datas);
+        //   console.log("converted");
+        // }
+        console.log(dropdownRef.current);
+      };
+      document.addEventListener("click", handleClickOutside, true);
+      return () => {
+        document.removeEventListener("click", handleClickOutside, true);
+      };
+    }, []);
+
+    const result = groups[id].tasks.map((task, idx) => {
       return (
-        <div key={`group_${id}_task_${idx}`} className="pb-2">
+        <div className="pb-2" key={`group_${id}_task_${idx}`}>
           <Card variant="mute">
             <div className="pb-4 font-bold border-dashed border-b-[1px] border-[#E0E0E0]">
               {task.name}
@@ -130,9 +217,15 @@ export default function Home() {
               <div className="absolute right-0 top-1">
                 <div className="relative overflow-hidden">
                   <input
+                    ref={(el) =>
+                      (dropdownRef.current[idx] = el as HTMLDivElement)
+                    }
                     type="checkbox"
                     checked={task.isOptionOpen}
-                    onChange={(event) => onOptionOpen(event, id, idx)}
+                    onChange={(event) => {
+                      onOptionOpen(event, id, idx);
+                      setrefIdx(idx);
+                    }}
                     className="peer z-10 w-full h-full absolute top-0 left-0 opacity-0"
                   />
                   <div className="peer-hover:bg-[#EDEDED] relative p-1 rounded peer-checked:bg-[#EDEDED]">
@@ -146,27 +239,79 @@ export default function Home() {
                 </div>
                 {task.isOptionOpen ? (
                   <div className="w-[280px] p-[14px_16px_14px_19px] absolute -right-0 translate-y-1 bg-white rounded-lg shadow-[0_4px_4px_rgba(0,0,0,0.08)] z-50">
-                    <button className="p-[6px_0_6px_0] flex">
-                      <div className="pr-[22px]">
-                        <Image src={icArrowRight} alt="icon move right" />
+                    <button
+                      className="p-[6px_0_6px_0] flex w-full hover:text-[#01959F] group"
+                      onClick={() => moveTo("next", id, idx)}
+                    >
+                      <div className="pr-[22px] translate-y-[6px] ">
+                        <div className="absolute invisible group-hover:visible">
+                          <Image
+                            src={icArrowRightActive}
+                            alt="icon move right"
+                          />
+                        </div>
+                        <div className="absolute visible group-hover:invisible">
+                          <Image src={icArrowRight} alt="icon move right" />
+                        </div>
                       </div>
+
                       <div>Move Right</div>
                     </button>
-                    <button className="p-[6px_0_6px_0] flex">
-                      <div className="pr-[22px]">
-                        <Image src={icArrowLeft} alt="icon move right" />
+                    <button
+                      className="p-[6px_0_6px_0] flex w-full hover:text-[#01959F] group"
+                      onClick={() => moveTo("prev", id, idx)}
+                    >
+                      <div className="pr-[22px] translate-y-[6px] ">
+                        <div className="absolute invisible group-hover:visible">
+                          <Image src={icArrowLeftActive} alt="icon move left" />
+                        </div>
+                        <div className="absolute visible group-hover:invisible">
+                          <Image src={icArrowLeft} alt="icon move left" />
+                        </div>
                       </div>
                       <div>Move Left</div>
                     </button>
-                    <button className="p-[6px_0_6px_0] flex">
-                      <div className="pr-[22px]">
-                        <Image src={icEdit} alt="icon move right" />
+                    <button
+                      className="p-[6px_0_6px_0] flex w-full hover:text-[#01959F] group"
+                      onClick={() => editTask(id, idx)}
+                      onMouseEnter={() =>
+                        setImageHover({
+                          isArrowLeftActive: false,
+                          isEditActive: true,
+                          isTrashActive: false,
+                          isArrowRightActive: false,
+                        })
+                      }
+                      onMouseLeave={() =>
+                        setImageHover({
+                          isArrowLeftActive: false,
+                          isEditActive: false,
+                          isTrashActive: false,
+                          isArrowRightActive: false,
+                        })
+                      }
+                    >
+                      <div className="pr-[22px] translate-y-[6px] ">
+                        <div className="absolute invisible group-hover:visible">
+                          <Image src={icEditActive} alt="icon edit" />
+                        </div>
+                        <div className="absolute visible group-hover:invisible">
+                          <Image src={icEdit} alt="icon edit" />
+                        </div>
                       </div>
                       <div>edit</div>
                     </button>
-                    <button className="p-[6px_0_6px_0] flex">
-                      <div className="pr-[22px]">
-                        <Image src={icTrash} alt="icon move right" />
+                    <button
+                      className="p-[6px_0_6px_0] flex w-full hover:text-[#E11428] group"
+                      onClick={() => deleteTask(id, idx)}
+                    >
+                      <div className="pr-[22px] translate-y-[6px] ">
+                        <div className="absolute invisible group-hover:visible">
+                          <Image src={icTrashActive} alt="icon trash" />
+                        </div>
+                        <div className="absolute visible group-hover:invisible">
+                          <Image src={icTrash} alt="icon trash" />
+                        </div>
                       </div>
                       <div>Delete</div>
                     </button>
@@ -180,6 +325,8 @@ export default function Home() {
         </div>
       );
     });
+
+    return <>{result}</>;
   };
 
   const groupsHtml = groups.map((group, idx) => {
@@ -215,13 +362,19 @@ export default function Home() {
               </Tag>
             </div>
             <div className="py-4">desember - januari</div>
-            {tasksHtml(idx)}
+            <TasksHtml id={idx} />
             <div className="mt-2">
               <button
                 className="flex"
                 onClick={() => {
                   setIseCreateTaskModalOpen(true);
                   setActiveGroup(group.id);
+                  setTaskFormtype("create");
+                  setTaskForm({
+                    name: "",
+                    progress_percentage: 0,
+                    isOptionOpen: false,
+                  });
                 }}
               >
                 <div className="pr-1 translate-y-[2px]">
@@ -252,7 +405,7 @@ export default function Home() {
 
           {iseCreateTaskModalOpen ? (
             <Modal
-              title="Create Task"
+              title={taskFormType === "create" ? "Create Task" : "Edit Task"}
               style={{ width: "420px", minHeight: "200px" }}
               closeBtn={() => setIseCreateTaskModalOpen(false)}
             >

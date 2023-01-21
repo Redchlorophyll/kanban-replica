@@ -8,9 +8,9 @@ type defaultLayout = {
 
 export default function defaultLayout({ children, onClick }: defaultLayout) {
   return (
-    <div className="w-full h-[100vh] bg-white">
+    <div className="w-full h-[100vh] pb-[70px] bg-white overflow-hidden">
       <Navbar onClick={onClick} />
-      {children}
+      <div className="h-full">{children}</div>
     </div>
   );
 }
