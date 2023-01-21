@@ -20,6 +20,7 @@ import icEditActive from "@/assets/ic_edit-active.svg";
 import icTrash from "@/assets/ic_trash.svg";
 import icTrashActive from "@/assets/ic_trash-active.svg";
 import icCreate from "@/assets/ic_create.svg";
+import icExclamation from "@/assets/ic_exclamation.svg";
 
 type groupType = {
   id: number;
@@ -45,6 +46,7 @@ type taskForm = {
 
 export default function Home() {
   const [inputText, setInputText] = useState("");
+  const [isModalDeleteTaskOpen, setIsmodalDeleteTaskOpen] = useState(false);
   const [isCreateGroupModalOpen, setIsCreateGroupModalOpen] = useState(false);
   const [taskFormType, setTaskFormtype] = useState<"create" | "edit">("create");
   const [groupForm, setGroupForm] = useState<groupForm>({
@@ -88,6 +90,13 @@ export default function Home() {
     setVariantCounter(tmpVariantCounter);
 
     return tmpVariantCounter;
+  };
+
+  const onDeleteTask = () => {
+    const data = [...groups];
+    data[activeGroup].tasks.splice(activeTask, 1);
+    setGroup(data);
+    setIsmodalDeleteTaskOpen(false);
   };
 
   const onSubmitCreateGroup = () => {
@@ -140,9 +149,9 @@ export default function Home() {
     const [refIdx, setrefIdx] = useState(0);
 
     const deleteTask = (groupNumber: number, taskIndex: number) => {
-      const data = [...groups];
-      data[groupNumber].tasks.splice(taskIndex, 1);
-      setGroup(data);
+      setIsmodalDeleteTaskOpen(true);
+      setActiveGroup(groupNumber);
+      setActiveTask(taskIndex);
     };
 
     const editTask = (groupNumber: number, taskIndex: number) => {
@@ -165,11 +174,10 @@ export default function Home() {
       data[groupNumber].tasks.splice(taskIndex, 1);
       if (direction === "next" && data[groupNumber + 1]) {
         data[groupNumber + 1].tasks.push(val);
-        setGroup(data);
       } else if (direction === "prev" && data[groupNumber - 1]) {
         data[groupNumber - 1].tasks.push(val);
-        setGroup(data);
       }
+      setGroup(data);
     };
 
     useEffect(() => {
@@ -274,22 +282,6 @@ export default function Home() {
                     <button
                       className="p-[6px_0_6px_0] flex w-full hover:text-[#01959F] group"
                       onClick={() => editTask(id, idx)}
-                      onMouseEnter={() =>
-                        setImageHover({
-                          isArrowLeftActive: false,
-                          isEditActive: true,
-                          isTrashActive: false,
-                          isArrowRightActive: false,
-                        })
-                      }
-                      onMouseLeave={() =>
-                        setImageHover({
-                          isArrowLeftActive: false,
-                          isEditActive: false,
-                          isTrashActive: false,
-                          isArrowRightActive: false,
-                        })
-                      }
                     >
                       <div className="pr-[22px] translate-y-[6px] ">
                         <div className="absolute invisible group-hover:visible">
@@ -489,6 +481,40 @@ export default function Home() {
                   </Button>
                 </div>
                 <Button onClick={onSubmitCreateGroup}>Submit</Button>
+              </div>
+            </Modal>
+          ) : (
+            ""
+          )}
+
+          {isModalDeleteTaskOpen ? (
+            <Modal
+              style={{
+                width: "420px",
+                minHeight: "188px",
+              }}
+              closeBtn={() => setIsmodalDeleteTaskOpen(false)}
+            >
+              <div className="flex absolute -translate-y-[45px]">
+                <Image src={icExclamation} alt="warning icon" />
+                <span className="ml-2 font-bold">Delete Task</span>
+              </div>
+              <div>
+                Are you sure want to delete this task? your action can’t be
+                reverted.
+              </div>
+              <div className="flex w-full justify-end pt-4">
+                <div className="mr-3">
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsmodalDeleteTaskOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+                <Button variant="danger" onClick={onDeleteTask}>
+                  Delete
+                </Button>
               </div>
             </Modal>
           ) : (
