@@ -2,19 +2,25 @@ import Head from "next/head";
 import Image from "next/image";
 import { Inter } from "@next/font/google";
 import styles from "@/styles/Home.module.css";
-import DefaultLayout from "@/layouts";
+import DefaultLayout, { navbarAction } from "@/layouts";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import Tag from "@/components/Tag";
 import Modal from "@/components/Modal";
 import ProgressBar from "@/components/ProgressBar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Textarea from "@/components/Textarea";
+import Card from "@/components/Card";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   const [inputText, setInputText] = useState("");
+  const { openGroupModal, isCreateGroupModalOpen } = navbarAction();
+  useEffect(() => {
+    console.log("test", isCreateGroupModalOpen);
+  }, [isCreateGroupModalOpen]);
+
   return (
     <>
       <Head>
@@ -37,18 +43,30 @@ export default function Home() {
           <Tag variant="danger">Text 2</Tag>
           <Tag variant="success">Text 3</Tag>
           <Tag variant="alert">Text 1</Tag>
-          {/* <Modal
-            title="test"
-            closeBtn={() => {
-              console.log("test");
-            }}
-          >
-            test
-          </Modal> */}
+          {isCreateGroupModalOpen ? (
+            <Modal
+              title="test"
+              closeBtn={() => {
+                console.log("test");
+              }}
+            >
+              test
+            </Modal>
+          ) : (
+            "tre"
+          )}
+
           <div className="w-[40%]">
             <ProgressBar precentage={10} />
           </div>
           <Textarea value={inputText} onChange={(v) => setInputText(v)} />
+          <div className="w-[300px] p-3">
+            <Card variant="primary">test</Card>
+            <Card variant="alert">test 2</Card>
+            <Card variant="danger">test 3</Card>
+            <Card variant="success">test 4</Card>
+            <Card variant="mute">test 5</Card>
+          </div>
         </DefaultLayout>
       </main>
     </>

@@ -25,7 +25,7 @@ export default function ProgressBar({ precentage = 0 }: ProgressBarType) {
         />
       </div>
       {precentage <= 99 ? (
-        <div className="-translate-y-[5px] translate-x-2 text-[#757575]">
+        <div className="-translate-y-[5px] translate-x-4 text-[#757575] absolute right-0">
           {precentage} %
         </div>
       ) : (

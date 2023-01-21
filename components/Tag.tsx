@@ -15,7 +15,7 @@ export default function Tag({ variant = "primary", children }: LabelType) {
 
   return (
     <label
-      className={`p-[2px_8px] bg-red-100 rounded-[4px] outline outline-1 ${labelVariants[variant]}`}
+      className={`p-[2px_8px] rounded-[4px] outline outline-1 ${labelVariants[variant]}`}
     >
       {children}
     </label>

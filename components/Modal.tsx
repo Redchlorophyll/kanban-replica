@@ -50,7 +50,10 @@ export default function Modal({
               ""
             )}
             {closeBtn ? (
-              <button className="absolute right-[30px] top-[25px]">
+              <button
+                onClick={closeBtn}
+                className="absolute right-[30px] top-[25px]"
+              >
                 <Image src={icClose} alt="close icon" />
               </button>
             ) : (
