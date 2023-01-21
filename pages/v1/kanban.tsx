@@ -41,11 +41,10 @@ type taskForm = {
   groupId?: number;
   name: string;
   progress_percentage: number;
-  isOptionOpen: boolean;
 };
 
 export default function Home() {
-  const [inputText, setInputText] = useState("");
+  const dropdownRef = useRef<HTMLDivElement[][]>([]);
   const [isModalDeleteTaskOpen, setIsmodalDeleteTaskOpen] = useState(false);
   const [isCreateGroupModalOpen, setIsCreateGroupModalOpen] = useState(false);
   const [taskFormType, setTaskFormtype] = useState<"create" | "edit">("create");
@@ -53,23 +52,17 @@ export default function Home() {
     title: "",
     description: "",
   });
+  const [activeDropdown, setActiveDropdown] = useState("");
   const [taskForm, setTaskForm] = useState<taskForm>({
     name: "",
     progress_percentage: 0,
-    isOptionOpen: false,
   });
-  const [imageHover, setImageHover] = useState({
-    isArrowRightActive: false,
-    isArrowLeftActive: false,
-    isEditActive: false,
-    isTrashActive: false,
-  });
-  const [variantCounter, setVariantCounter] = useState(0);
   const [activeGroup, setActiveGroup] = useState(0);
   const [activeTask, setActiveTask] = useState(0);
   const [iseCreateTaskModalOpen, setIseCreateTaskModalOpen] = useState(false);
   const [groups, setGroup] = useState<groupType[]>([]);
   const groupVariants = ["primary", "alert", "danger", "success"];
+
   const onOptionOpen = (
     event: React.FormEvent<HTMLInputElement>,
     groupIdx: number,
@@ -77,17 +70,19 @@ export default function Home() {
   ) => {
     console.log("should be clicked");
     const { checked } = event.target as HTMLInputElement;
-    const data = [...groups];
-    console.log("open", data[groupIdx].tasks[taskIdx], checked);
-    data[groupIdx].tasks[taskIdx].isOptionOpen = checked;
-    setGroup(data);
+    let data = [...groups];
+
+    if (activeDropdown === `group_${groupIdx}_task_${taskIdx}`) {
+      setActiveDropdown("");
+    } else {
+      setActiveDropdown(`group_${groupIdx}_task_${taskIdx}`);
+    }
   };
 
   const variantSelector = () => {
     let tmpVariantCounter = groups.length;
     let totalMultiples = Math.floor(tmpVariantCounter / 3) * 3;
     tmpVariantCounter = tmpVariantCounter - totalMultiples;
-    setVariantCounter(tmpVariantCounter);
 
     return tmpVariantCounter;
   };
@@ -140,13 +135,11 @@ export default function Home() {
     setTaskForm({
       name: "",
       progress_percentage: 0,
-      isOptionOpen: false,
     });
   };
 
   const TasksHtml = ({ id }: { id: number }) => {
-    const dropdownRef = useRef<HTMLDivElement[]>([]);
-    const [refIdx, setrefIdx] = useState(0);
+    const [refIdx, setrefIdx] = useState<[number, number]>([0, 0]);
 
     const deleteTask = (groupNumber: number, taskIndex: number) => {
       setIsmodalDeleteTaskOpen(true);
@@ -170,40 +163,47 @@ export default function Home() {
     ) => {
       const data = [...groups];
       const val = data[groupNumber].tasks[taskIndex];
-      console.log("testsssss", data[groupNumber], data[id + 1]);
       data[groupNumber].tasks.splice(taskIndex, 1);
+
       if (direction === "next" && data[groupNumber + 1]) {
         data[groupNumber + 1].tasks.push(val);
       } else if (direction === "prev" && data[groupNumber - 1]) {
         data[groupNumber - 1].tasks.push(val);
       }
+
       setGroup(data);
+    };
+
+    const isDropdownNotFocused = (event: MouseEvent) => {
+      let result = false;
+      for (let i = 0; i < dropdownRef.current.length; i += 1) {
+        for (let j = 0; j < dropdownRef.current.length; j += 1) {
+          if (dropdownRef.current[i][j] === (event.target as Node)) {
+            result = false;
+            break;
+          } else {
+            result = true;
+          }
+        }
+      }
+      return result;
     };
 
     useEffect(() => {
       const handleClickOutside = (event: MouseEvent) => {
-        let isOtherDropdownNotClicked = false;
-        dropdownRef.current.forEach((divData) => {
-          console.log("test", event.target as Node, divData);
-          if (divData === (event.target as Node)) {
-            isOtherDropdownNotClicked = false;
-          } else isOtherDropdownNotClicked = true;
-        });
-        console.log(dropdownRef.current);
+        if (dropdownRef.current.length === 0) return;
+        const isOtherDropdownNotClicked = isDropdownNotFocused(event);
 
-        // if (
-        //   dropdownRef.current[refIdx] &&
-        //   !dropdownRef.current[refIdx].contains(event.target as Node) &&
-        //   isOtherDropdownNotClicked
-        // ) {
-        //   const datas = [...groups];
-        //   datas[id].tasks.forEach((data: taskForm) => {
-        //     data.isOptionOpen = false;
-        //   });
-        //   setGroup(datas);
-        //   console.log("converted");
-        // }
-        console.log(dropdownRef.current);
+        if (
+          dropdownRef.current[refIdx[0]][refIdx[1]] &&
+          !dropdownRef.current[refIdx[0]][refIdx[1]].contains(
+            event.target as Node
+          ) &&
+          isOtherDropdownNotClicked &&
+          activeDropdown !== ""
+        ) {
+          setActiveDropdown("");
+        }
       };
       document.addEventListener("click", handleClickOutside, true);
       return () => {
@@ -225,16 +225,19 @@ export default function Home() {
               <div className="absolute right-0 top-1">
                 <div className="relative overflow-hidden">
                   <input
-                    ref={(el) =>
-                      (dropdownRef.current[idx] = el as HTMLDivElement)
-                    }
+                    ref={(el) => {
+                      if (dropdownRef.current[id] === undefined) {
+                        dropdownRef.current[id] = [];
+                      }
+                      dropdownRef.current[id].push(el as HTMLDivElement);
+                    }}
                     type="checkbox"
-                    checked={task.isOptionOpen}
+                    checked={`group_${id}_task_${idx}` === activeDropdown}
                     onChange={(event) => {
                       onOptionOpen(event, id, idx);
-                      setrefIdx(idx);
+                      setrefIdx([id, idx]);
                     }}
-                    className="peer z-10 w-full h-full absolute top-0 left-0 opacity-0"
+                    className="peer cursor-pointer z-10 w-full h-full absolute top-0 left-0 opacity-0"
                   />
                   <div className="peer-hover:bg-[#EDEDED] relative p-1 rounded peer-checked:bg-[#EDEDED]">
                     <Image
@@ -245,7 +248,7 @@ export default function Home() {
                     />
                   </div>
                 </div>
-                {task.isOptionOpen ? (
+                {`group_${id}_task_${idx}` === activeDropdown ? (
                   <div className="w-[280px] p-[14px_16px_14px_19px] absolute -right-0 translate-y-1 bg-white rounded-lg shadow-[0_4px_4px_rgba(0,0,0,0.08)] z-50">
                     <button
                       className="p-[6px_0_6px_0] flex w-full hover:text-[#01959F] group"
@@ -365,7 +368,6 @@ export default function Home() {
                   setTaskForm({
                     name: "",
                     progress_percentage: 0,
-                    isOptionOpen: false,
                   });
                 }}
               >
