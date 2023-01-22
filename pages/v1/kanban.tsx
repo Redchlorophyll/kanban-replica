@@ -118,7 +118,7 @@ export default function Home() {
     let data: groupType[] = [...groups];
     if (taskFormType === "create") {
       data = data.map((group: groupType) => {
-        let groupData = group;
+        const groupData = group;
         if (group.id === activeGroup) {
           groupData.tasks.push(taskForm);
         }
