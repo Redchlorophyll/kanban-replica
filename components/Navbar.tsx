@@ -1,9 +1,21 @@
 import React from "react";
+import Button from "./Button";
 
-export default function navbar() {
+type navbarProps = {
+  onClick?: () => void;
+};
+
+export default function navbar({ onClick }: navbarProps) {
+  const onClickCreateBtn = () => {
+    if (!onClick) return;
+    onClick();
+  };
   return (
-    <div className="top-0 w-full h-[60px] bg-green-400 flex justify-center">
-      <div className="translate-y-[15px] text-xl bg-red-100">navbar</div>
+    <div className="top-0 w-full h-[60px] flex border-b-2 border-b-[#F5F5F5]">
+      <div className="translate-y-[15px] flex h-[30px] translate-x-4">
+        <h1 className="text-xl font-bold mr-[10px]">Product Roadmap</h1>
+        <Button onClick={onClickCreateBtn}>+ Add New Group</Button>
+      </div>
     </div>
   );
 }
