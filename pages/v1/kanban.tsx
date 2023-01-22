@@ -25,6 +25,16 @@ import icTrashActive from "@/assets/ic_trash-active.svg";
 import icCreate from "@/assets/ic_create.svg";
 import icExclamation from "@/assets/ic_exclamation.svg";
 
+type groupType = {
+  id: number;
+  title: string;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+  variant: number;
+  tasks: taskForm[];
+};
+
 type groupForm = {
   title: string;
   description: string;
@@ -105,13 +115,14 @@ export default function Home() {
   };
 
   const onSubmitCreateTask = () => {
-    let data: any;
+    let data: groupType[] = [...groups];
     if (taskFormType === "create") {
-      data = groups.map((group) => {
+      data = data.map((group: groupType) => {
+        let groupData = group;
         if (group.id === activeGroup) {
-          data.tasks.push(taskForm);
+          groupData.tasks.push(taskForm);
         }
-        return group;
+        return groupData;
       });
     } else {
       data = [...groups];
