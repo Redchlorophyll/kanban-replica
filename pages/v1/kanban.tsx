@@ -25,12 +25,15 @@ import icTrashActive from "@/assets/ic_trash-active.svg";
 import icCreate from "@/assets/ic_create.svg";
 import icExclamation from "@/assets/ic_exclamation.svg";
 
-type groupType = {
+type vanilaGroupType = {
   id: number;
   title: string;
   created_by: string;
   created_at: string;
   updated_at: string;
+};
+
+type groupType = vanilaGroupType & {
   variant: number;
   tasks: taskForm[];
 };
@@ -116,11 +119,11 @@ export default function Home() {
   };
 
   const onSubmitCreateTask = () => {
-    let data;
+    let data: any;
     if (taskFormType === "create") {
       data = groups.map((group) => {
         if (group.id === activeGroup) {
-          group.tasks.push(taskForm);
+          data.tasks.push(taskForm);
         }
         return group;
       });
