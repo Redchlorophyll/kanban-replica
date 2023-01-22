@@ -15,5 +15,7 @@ module.exports = {
     "@typescript-eslint/quotes": "off",
     "@typescript-eslint/semi": "off",
     "@typescript-eslint/comma-dangle": "off",
+    "@typescript-eslint/member-delimiter-style": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
   },
 };
