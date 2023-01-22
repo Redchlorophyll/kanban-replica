@@ -11,6 +11,7 @@ import ProgressBar from "@/components/ProgressBar";
 import { useEffect, useRef, useState } from "react";
 import Textarea from "@/components/Textarea";
 import Card from "@/components/Card";
+import { kanbanGroups } from "@/context/kanbanContext";
 
 import icMore from "@/assets/ic_more.svg";
 import icArrowRight from "@/assets/ic_arrow-right.svg";
@@ -62,7 +63,8 @@ export default function Home() {
   const [activeGroup, setActiveGroup] = useState(0);
   const [activeTask, setActiveTask] = useState(0);
   const [iseCreateTaskModalOpen, setIseCreateTaskModalOpen] = useState(false);
-  const [groups, setGroup] = useState<groupType[]>([]);
+  //   const [groups, setGroup] = useState<groupType[]>([]);
+  const { groups, setGroup } = kanbanGroups();
   const groupVariants = ["primary", "alert", "danger", "success"];
 
   const onOptionOpen = (
