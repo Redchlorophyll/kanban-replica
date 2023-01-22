@@ -1,17 +1,13 @@
 import React, { useState } from "react";
 
 import Head from "next/head";
-import { Inter } from "@next/font/google";
 import Router from "next/router";
 import userAPI from "services/user";
 
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 
-const inter = Inter({ subsets: ["latin"] });
-
 export default function Home() {
-  const [inputText, setInputText] = useState("");
   const [loginForm, setLoginForm] = useState({
     email: "",
     password: "",

@@ -86,7 +86,7 @@ export default function Home() {
 
   const variantSelector = () => {
     let tmpVariantCounter = groups.length;
-    let totalMultiples = Math.floor(tmpVariantCounter / 3) * 3;
+    const totalMultiples = Math.floor(tmpVariantCounter / 3) * 3;
     tmpVariantCounter = tmpVariantCounter - totalMultiples;
 
     return tmpVariantCounter;
