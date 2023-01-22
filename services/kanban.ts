@@ -1,9 +1,4 @@
 import axios from "axios";
-import Cookies from "cookies";
-
-const userToken = () => {
-  const cookies = new Cookies();
-};
 
 const instance = axios.create({
   baseURL: "https://todo-api-18-140-52-65.rakamin.com",
