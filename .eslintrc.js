@@ -11,5 +11,9 @@ module.exports = {
     project: "./tsconfig.json",
   },
   plugins: ["react"],
-  rules: {},
+  rules: {
+    "@typescript-eslint/quotes": "off",
+    "@typescript-eslint/semi": "off",
+    "@typescript-eslint/comma-dangle": "off",
+  },
 };

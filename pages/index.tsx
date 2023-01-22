@@ -1,9 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 
 import Head from "next/head";
-import Image from "next/image";
 import { Inter } from "@next/font/google";
-import { useEffect, useState } from "react";
 import Router from "next/router";
 import userAPI from "services/user";
 

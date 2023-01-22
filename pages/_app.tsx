@@ -1,3 +1,5 @@
+import React from "react";
+
 import "@/styles/globals.css";
 import { KanbanContextProvider } from "@/context/kanbanContext";
 import type { AppProps } from "next/app";
