@@ -31,7 +31,6 @@ export default function Home() {
       } else {
         data = await userAPI().signUp(signUpForm);
       }
-      console.log(data);
       document.cookie = `user.token=${data.auth_token}`;
       Router.push("v1/kanban");
     } catch (e) {
@@ -39,15 +38,6 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
-    (async () => {
-      const data = await userAPI().signIn({
-        email: "tony@stark.com",
-        password: "password",
-      });
-      console.log(data);
-    })();
-  }, []);
   return (
     <>
       <Head>
