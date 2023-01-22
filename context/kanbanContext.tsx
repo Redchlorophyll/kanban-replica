@@ -21,7 +21,6 @@ type taskForm = {
   groupId?: number;
   name: string;
   progress_percentage: number;
-  isOptionOpen: boolean;
 };
 
 type kanbanContextType = {
@@ -31,9 +30,7 @@ type kanbanContextType = {
 
 const kanbanContext = createContext<kanbanContextType>({
   groups: [],
-  setGroup: () => {
-    console.log("test");
-  },
+  setGroup: () => {},
 });
 
 export const KanbanContextProvider = ({
