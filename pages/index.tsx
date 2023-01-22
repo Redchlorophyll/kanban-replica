@@ -18,8 +18,11 @@ export default function Home() {
     password: "",
     password_confirmation: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const submitForm = async (type: "login" | "signup") => {
+    if (isLoading) return;
+    setIsLoading(true);
     try {
       let data;
       if (type === "login") {
@@ -32,6 +35,7 @@ export default function Home() {
     } catch (e) {
       console.log(e);
     }
+    setIsLoading(false);
   };
 
   return (
@@ -65,8 +69,11 @@ export default function Home() {
               />
             </div>
             <div className="flex justify-center">
-              <Button onClick={async () => await submitForm("login")}>
-                Login
+              <Button
+                variant={isLoading ? "outline" : "primary"}
+                onClick={() => submitForm("login")}
+              >
+                {isLoading ? "Please Wait..." : "Login"}
               </Button>
             </div>
           </div>
@@ -112,8 +119,11 @@ export default function Home() {
               />
             </div>
             <div className="flex justify-center">
-              <Button onClick={async () => await submitForm("signup")}>
-                Sign Up
+              <Button
+                variant={isLoading ? "outline" : "primary"}
+                onClick={() => submitForm("signup")}
+              >
+                {isLoading ? "Please Wait..." : "Sign Up"}
               </Button>
             </div>
           </div>
