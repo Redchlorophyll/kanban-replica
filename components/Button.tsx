@@ -1,13 +1,9 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode } from "react";
 
 type buttonProps = {
   variant?: "primary" | "danger" | "outline";
   children?: ReactNode;
   onClick?: () => void;
-};
-
-type buttonStyle = {
-  variant?: "primary" | "danger" | "outline";
 };
 
 export default function Button({

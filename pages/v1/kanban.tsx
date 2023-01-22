@@ -25,19 +25,6 @@ import icTrashActive from "@/assets/ic_trash-active.svg";
 import icCreate from "@/assets/ic_create.svg";
 import icExclamation from "@/assets/ic_exclamation.svg";
 
-type vanilaGroupType = {
-  id: number;
-  title: string;
-  created_by: string;
-  created_at: string;
-  updated_at: string;
-};
-
-type groupType = vanilaGroupType & {
-  variant: number;
-  tasks: taskForm[];
-};
-
 type groupForm = {
   title: string;
   description: string;
@@ -66,7 +53,6 @@ export default function Home() {
   const [activeGroup, setActiveGroup] = useState(0);
   const [activeTask, setActiveTask] = useState(0);
   const [iseCreateTaskModalOpen, setIseCreateTaskModalOpen] = useState(false);
-  //   const [groups, setGroup] = useState<groupType[]>([]);
   const { groups, setGroup } = kanbanGroups();
   const groupVariants = ["primary", "alert", "danger", "success"];
 
