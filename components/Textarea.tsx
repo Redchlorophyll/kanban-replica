@@ -4,7 +4,7 @@ type textareaProps = {
   onChange?: (event: string) => void;
   value?: string;
   placeholder?: string;
-  limit?: number; //total characters in textarea
+  limit?: number;
   isDisabled?: boolean;
   label?: string;
   style?: CSSProperties;
@@ -35,7 +35,7 @@ export default function Textarea({
         setTextBoxVal(trimmedVal);
       }
       setSumCharacters(inputLength);
-    } else if (value || value === "") setTextBoxVal(value);
+    } else if (value ?? value === "") setTextBoxVal(value);
   }, [value, limit]);
 
   const onChangeTextarea = (event: string) => {

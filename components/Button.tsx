@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useState } from "react";
 
 type buttonProps = {
   variant?: "primary" | "danger" | "outline";
@@ -15,8 +15,6 @@ export default function Button({
   children = "Button",
   onClick,
 }: buttonProps) {
-  const [style, setStyle] = useState<string>("");
-
   const btnVariant = {
     primary: "bg-[#01959F] font-bold text-white",
     danger: "bg-[#E11428] font-bold text-white",

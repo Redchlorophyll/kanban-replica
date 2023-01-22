@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 
 import Head from "next/head";
 import Image from "next/image";
-import styles from "@/styles/Home.module.css";
 
 import DefaultLayout from "@/layouts";
 import Button from "@/components/Button";
@@ -10,7 +9,6 @@ import Input from "@/components/Input";
 import Tag from "@/components/Tag";
 import Modal from "@/components/Modal";
 import ProgressBar from "@/components/ProgressBar";
-import { useEffect, useRef, useState } from "react";
 import Textarea from "@/components/Textarea";
 import Card from "@/components/Card";
 import { kanbanGroups } from "@/context/kanbanContext";

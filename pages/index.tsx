@@ -65,7 +65,9 @@ export default function Home() {
               />
             </div>
             <div className="flex justify-center">
-              <Button onClick={() => submitForm("login")}>Login</Button>
+              <Button onClick={async () => await submitForm("login")}>
+                Login
+              </Button>
             </div>
           </div>
           <div className="mr-5 flex">
@@ -110,7 +112,9 @@ export default function Home() {
               />
             </div>
             <div className="flex justify-center">
-              <Button onClick={() => submitForm("signup")}>Sign Up</Button>
+              <Button onClick={async () => await submitForm("signup")}>
+                Sign Up
+              </Button>
             </div>
           </div>
         </div>
