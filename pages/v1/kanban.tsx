@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Image from "next/image";
 import styles from "@/styles/Home.module.css";
+
 import DefaultLayout from "@/layouts";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
@@ -10,6 +11,7 @@ import ProgressBar from "@/components/ProgressBar";
 import { useEffect, useRef, useState } from "react";
 import Textarea from "@/components/Textarea";
 import Card from "@/components/Card";
+
 import icMore from "@/assets/ic_more.svg";
 import icArrowRight from "@/assets/ic_arrow-right.svg";
 import icArrowRightActive from "@/assets/ic_arrow-right-active.svg";
@@ -68,10 +70,6 @@ export default function Home() {
     groupIdx: number,
     taskIdx: number
   ) => {
-    console.log("should be clicked");
-    const { checked } = event.target as HTMLInputElement;
-    let data = [...groups];
-
     if (activeDropdown === `group_${groupIdx}_task_${taskIdx}`) {
       setActiveDropdown("");
     } else {
@@ -139,12 +137,11 @@ export default function Home() {
   };
 
   const TasksHtml = ({ id }: { id: number }) => {
-    const [refIdx, setrefIdx] = useState<[number, number]>([0, 0]);
-
     const deleteTask = (groupNumber: number, taskIndex: number) => {
       setIsmodalDeleteTaskOpen(true);
       setActiveGroup(groupNumber);
       setActiveTask(taskIndex);
+      setActiveDropdown("");
     };
 
     const editTask = (groupNumber: number, taskIndex: number) => {
@@ -154,6 +151,7 @@ export default function Home() {
       setActiveTask(taskIndex);
       setIseCreateTaskModalOpen(true);
       setTaskForm(data);
+      setActiveDropdown("");
     };
 
     const moveTo = (
@@ -172,44 +170,8 @@ export default function Home() {
       }
 
       setGroup(data);
+      setActiveDropdown("");
     };
-
-    const isDropdownNotFocused = (event: MouseEvent) => {
-      let result = false;
-      for (let i = 0; i < dropdownRef.current.length; i += 1) {
-        for (let j = 0; j < dropdownRef.current.length; j += 1) {
-          if (dropdownRef.current[i][j] === (event.target as Node)) {
-            result = false;
-            break;
-          } else {
-            result = true;
-          }
-        }
-      }
-      return result;
-    };
-
-    useEffect(() => {
-      const handleClickOutside = (event: MouseEvent) => {
-        if (dropdownRef.current.length === 0) return;
-        const isOtherDropdownNotClicked = isDropdownNotFocused(event);
-
-        if (
-          dropdownRef.current[refIdx[0]][refIdx[1]] &&
-          !dropdownRef.current[refIdx[0]][refIdx[1]].contains(
-            event.target as Node
-          ) &&
-          isOtherDropdownNotClicked &&
-          activeDropdown !== ""
-        ) {
-          setActiveDropdown("");
-        }
-      };
-      document.addEventListener("click", handleClickOutside, true);
-      return () => {
-        document.removeEventListener("click", handleClickOutside, true);
-      };
-    }, []);
 
     const result = groups[id].tasks.map((task, idx) => {
       return (
@@ -235,7 +197,6 @@ export default function Home() {
                     checked={`group_${id}_task_${idx}` === activeDropdown}
                     onChange={(event) => {
                       onOptionOpen(event, id, idx);
-                      setrefIdx([id, idx]);
                     }}
                     className="peer cursor-pointer z-10 w-full h-full absolute top-0 left-0 opacity-0"
                   />
